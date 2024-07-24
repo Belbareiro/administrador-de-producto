@@ -1,0 +1,20 @@
+.detalles {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+.detalles h2 {
+    font-size: 35px;
+}
+
+.detalles h3 {
+    font-size: 25px;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+
+}
+
+.detalles p {
+    font-size: 20px;
+
+}

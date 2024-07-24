@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import '../components/ProductForm.css'
+import '../ProductForm/ProductForm.css'
 
-const ProductForm = () => {
+
+const ProductForm = ({ onProductAdded }) => {
     const [title, setTitle] = useState('');
     const [price, setPrice] = useState('');
     const [description, setDescription] = useState('');
@@ -16,6 +17,8 @@ const ProductForm = () => {
                 description
             });
             console.log('Producto agregado:', response.data);
+            // Llama a la función de callback para actualizar la lista de productos
+            onProductAdded();
             // Reiniciar el formulario
             setTitle('');
             setPrice('');
