@@ -1,30 +1,63 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import '../ProductForm/ProductForm.css'
+import { useParams, useNavigate } from 'react-router-dom';
+import '../ProductForm/ProductForm.css';
 
-
-const ProductForm = ({ onProductAdded }) => {
+const ProductForm = ({ isEdit = false, onProductAdded, onProductUpdated }) => {
     const [title, setTitle] = useState('');
     const [price, setPrice] = useState('');
     const [description, setDescription] = useState('');
+    const { id } = useParams();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (isEdit) {
+            const fetchProduct = async () => {
+                try {
+                    const response = await axios.get(`http://localhost:5000/api/products/${id}`);
+                    const product = response.data;
+                    setTitle(product.title);
+                    setPrice(product.price);
+                    setDescription(product.description);
+                } catch (error) {
+                    console.error('Error al obtener el producto:', error);
+                }
+            };
+            fetchProduct();
+        }
+    }, [isEdit, id]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:5000/api/products', {
-                title,
-                price,
-                description
-            });
-            console.log('Producto agregado:', response.data);
-            // Llama a la función de callback para actualizar la lista de productos
-            onProductAdded();
+            if (isEdit) {
+                const response = await axios.put(`http://localhost:5000/api/products/${id}`, {
+                    title,
+                    price,
+                    description,
+                });
+                console.log('Producto actualizado:', response.data);
+                if (onProductUpdated) {
+                    onProductUpdated();
+                }
+                navigate('/');
+            } else {
+                const response = await axios.post('http://localhost:5000/api/products', {
+                    title,
+                    price,
+                    description,
+                });
+                console.log('Producto agregado:', response.data);
+                if (onProductAdded) {
+                    onProductAdded();
+                }
+            }
             // Reiniciar el formulario
             setTitle('');
             setPrice('');
             setDescription('');
         } catch (error) {
-            console.error('Error al agregar el producto:', error);
+            console.error('Error al agregar/actualizar el producto:', error);
         }
     };
 
@@ -50,7 +83,7 @@ const ProductForm = ({ onProductAdded }) => {
                 onChange={(e) => setDescription(e.target.value)}
                 required
             />
-            <button type="submit">Agregar Producto</button>
+            <button type="submit">{isEdit ? 'Actualizar Producto' : 'Agregar Producto'}</button>
         </form>
     );
 };

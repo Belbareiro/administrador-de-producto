@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
-import '../ProductDetails/ProductDetails.css'
+import { useParams, useNavigate } from 'react-router-dom';
+import '../ProductDetails/ProductDetails.css';
 
 const ProductDetails = () => {
-    const { id } = useParams(); // Obtiene el ID del producto desde la URL
+    const { id } = useParams();
     const [product, setProduct] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -20,6 +21,15 @@ const ProductDetails = () => {
         fetchProduct();
     }, [id]);
 
+    const handleDeleteProduct = async () => {
+        try {
+            await axios.delete(`http://localhost:5000/api/products/${id}`);
+            navigate('/'); // Redirige a la vista principal después de eliminar
+        } catch (error) {
+            console.error('Error al eliminar el producto:', error);
+        }
+    };
+
     if (!product) return <div>Cargando...</div>;
 
     return (
@@ -28,6 +38,7 @@ const ProductDetails = () => {
             <h3>{product.title}</h3>
             <p>Precio: ${product.price}</p>
             <p>Descripción: {product.description}</p>
+            <button onClick={handleDeleteProduct}>Eliminar</button>
         </div>
     );
 };

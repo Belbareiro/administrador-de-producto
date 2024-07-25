@@ -1,0 +1,19 @@
+.listaProductos li {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.links {
+    display: flex;
+    flex-direction: row;
+
+}
+
+.linkEditar {
+    width: 50px;
+    text-decoration: none;
+    background-color: rgb(206, 203, 199);
+    color: black;
+    font-weight: bold;
+}

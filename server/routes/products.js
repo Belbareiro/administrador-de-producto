@@ -11,4 +11,10 @@ router.get('/', productController.getAllProducts);
 // Ruta para obtener un producto específico por ID
 router.get('/:id', productController.getProductById);
 
+// Ruta para actualizar un producto específico por ID
+router.put('/:id', productController.updateProduct);
+
+// Ruta para eliminar un producto específico por ID
+router.delete('/:id', productController.deleteProduct);
+
 module.exports = router;

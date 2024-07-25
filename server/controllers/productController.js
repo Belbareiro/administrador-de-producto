@@ -37,3 +37,36 @@ exports.getProductById = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+// Actualizar un producto específico por ID
+exports.updateProduct = async (req, res) => {
+    try {
+        const { title, price, description } = req.body;
+        const updatedProduct = await Product.findByIdAndUpdate(
+            req.params.id,
+            { title, price, description },
+            { new: true }
+        );
+        if (!updatedProduct) {
+            return res.status(404).json({ message: 'Producto no encontrado' });
+        }
+        res.status(200).json(updatedProduct);
+    } catch (error) {
+        console.error('Error al actualizar el producto:', error);
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// Eliminar un producto específico por ID
+exports.deleteProduct = async (req, res) => {
+    try {
+        const deletedProduct = await Product.findByIdAndDelete(req.params.id);
+        if (!deletedProduct) {
+            return res.status(404).json({ message: 'Producto no encontrado' });
+        }
+        res.status(200).json({ message: 'Producto eliminado' });
+    } catch (error) {
+        console.error('Error al eliminar el producto:', error);
+        res.status(500).json({ message: error.message });
+    }
+};
